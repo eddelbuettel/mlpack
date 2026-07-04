@@ -184,6 +184,7 @@ jobs:
 
       # Run the tests manually so that we can get JUnit output.
       - name: Run mlpack_test
+        if: matrix.config.name == 'CLI'
         run: |
           cd build
           # The use of only one thread is to prevent thrashing on older versions
