@@ -131,8 +131,7 @@ jobs:
         if: matrix.config.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install --yes --allow-unauthenticated \
-              libopenblas-dev libstb-dev libcereal-dev xz-utils
+          sudo apt-get install --yes --allow-unauthenticated libopenblas-dev libcereal-dev xz-utils
 
       # Set up the build environment for any bindings, if needed.
       - name: Set up binding dependencies
