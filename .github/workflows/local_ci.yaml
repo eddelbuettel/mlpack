@@ -1,5 +1,5 @@
 ## local variant
-
+##
 # ci.yml: defines all the CI jobs run for each commit and pull request.  For
 # Linux and macOS, we run a matrix job that tests all the bindings.  For
 # Windows, we just run one build (see the later part of the file).
@@ -114,7 +114,7 @@ jobs:
         with:
           key: ${{ matrix.config.os }}-${{ matrix.config.name }}
           append-timestamp: true
-          verbose: 1
+          verbose: 2
           variant: ccache
           max-size: 10G # Github has a 10GB repo cache limit, so we use 1GB/job.
 
