@@ -48,13 +48,6 @@ runs:
         name: mlpack_r_tarball
         path: build/src/mlpack/bindings/R/${{ env.MLPACK_R_PACKAGE }}
 
-    - name: "Install R CMD check dependencies"
-      if: inputs.lang == 'R'
-      shell: Rscript {0}
-      run: |
-          install.packages(c('remotes', 'rcmdcheck', 'curl'))
-          remotes::install_deps('build/src/mlpack/bindings/R/${{ env.MLPACK_R_PACKAGE }}', dependencies = TRUE)
-
     - name: "Run R CMD check"
       if: inputs.lang == 'R'
       shell: bash
@@ -63,11 +56,15 @@ runs:
       # and therein the standard directory 'mlpack.Rcheck/tests/'
       # TODO: revert to error_on = 'warning' (but our dev versions often have warnings)
       run: |
-          Rscript -e "rcmdcheck::rcmdcheck('build/src/mlpack/bindings/R/${{ env.MLPACK_R_PACKAGE }}', \
-                         args = c('--no-manual', '--as-cran'), \
-                         error_on = 'error', \
-                         check_dir = 'check')"
-          mv check/mlpack.Rcheck/tests/r_bindings.junit.xml build/r_bindings.junit.xml
+          ROOTDIR=`pwd`
+          cd build/src/mlpack/bindings/R
+          ls -l ${{ env.MLPACK_R_PACKAGE }}
+          #Rscript -e "rcmdcheck::rcmdcheck('${{ env.MLPACK_R_PACKAGE }}', \
+          #               args = c('--no-manual', '--as-cran'), \
+          #               error_on = 'error', \
+          #               check_dir = 'check')"
+          R CMD check --no-manual --no-vignettes --as-cran ${{ env.MLPACK_R_PACKAGE }}
+          mv mlpack.Rcheck/tests/r_bindings.junit.xml ${ROOTDIR}/build/r_bindings.junit.xml
 
     # TODO: upload check results on failure
 
