@@ -104,7 +104,7 @@ jobs:
         ]
 
     name: '${{ matrix.config.os }} (${{ matrix.config.name }})'
-    if: ${{ github.repository == 'eddelbuettel/mlpack' }} && ${{ matrix.config.name }} == 'R'
+    if: ${{ github.repository == 'eddelbuettel/mlpack' }} && '${{ matrix.config.name }}' == 'R'
     runs-on: ${{ matrix.config.runner }}
 
     steps:
