@@ -1,19 +1,15 @@
+## local variant
+
 # ci.yml: defines all the CI jobs run for each commit and pull request.  For
 # Linux and macOS, we run a matrix job that tests all the bindings.  For
 # Windows, we just run one build (see the later part of the file).
 
-name: Continuous Integration
+name: Local Continuous Integration
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - master
-      - main
   pull_request:
-    branches:
-      - master
-      - main
   release:
     types: [published, created, edited]
 permissions:
@@ -32,82 +28,81 @@ jobs:
       fail-fast: false # Run all configurations even if one fails.
       matrix:
         config: [
-          {
-            runner: ubuntu-latest,
-            os: 'Linux',
-            name: 'Debug',
-            # Disable [DEBUG] output from the tests because it's WAY too verbose.
-            cmakeVars: '-DCMAKE_BUILD_TYPE=Debug -DBUILD_CLI_EXECUTABLES=OFF -DCMAKE_CXX_FLAGS="-DMLPACK_NO_PRINT_DEBUG" -DENABLE_HTTPLIB=ON',
-            # Core count intentionally reduced to 2 as resource exhaustion
-            # seen when compiling with four cores given our C++ load
-            cores: 2
-          },
-          {
-            runner: ubuntu-latest,
-            os: 'Linux',
-            name: 'CLI',
-            cmakeVars: '-DBUILD_CLI_EXECUTABLES=ON -DENABLE_HTTPLIB=ON',
-            cores: 4
-          },
-          {
-            runner: ubuntu-latest,
-            os: 'Linux',
-            name: 'Python',
-            cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_PYTHON_BINDINGS=ON -DENABLE_HTTPLIB=ON',
-            cores: 4
-          },
-          {
-            runner: ubuntu-latest,
-            os: 'Linux',
-            name: 'Julia',
-            cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_JULIA_BINDINGS=ON -DENABLE_HTTPLIB=ON',
-            cores: 4
-          },
+          # {
+          #   runner: ubuntu-latest,
+          #   os: 'Linux',
+          #   name: 'Debug',
+          #   # Disable [DEBUG] output from the tests because it's WAY too verbose.
+          #   cmakeVars: '-DCMAKE_BUILD_TYPE=Debug -DBUILD_CLI_EXECUTABLES=OFF -DCMAKE_CXX_FLAGS="-DMLPACK_NO_PRINT_DEBUG" -DENABLE_HTTPLIB=ON',
+          #   # Core count intentionally reduced to 2 as resource exhaustion
+          #   # seen when compiling with four cores given our C++ load
+          #   cores: 2
+          # },
+          # {
+          #   runner: ubuntu-latest,
+          #   os: 'Linux',
+          #   name: 'CLI',
+          #   cmakeVars: '-DBUILD_CLI_EXECUTABLES=ON -DENABLE_HTTPLIB=ON',
+          #   cores: 4
+          # },
+          # {
+          #   runner: ubuntu-latest,
+          #   os: 'Linux',
+          #   name: 'Python',
+          #   cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_PYTHON_BINDINGS=ON -DENABLE_HTTPLIB=ON',
+          #   cores: 4
+          # },
+          # {
+          #   runner: ubuntu-latest,
+          #   os: 'Linux',
+          #   name: 'Julia',
+          #   cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_JULIA_BINDINGS=ON -DENABLE_HTTPLIB=ON',
+          #   cores: 4
+          # },
           {
             runner: ubuntu-latest,
             os: 'Linux',
             name: 'R',
-            cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_R_BINDINGS=ON -DCEREAL_INCLUDE_DIR=../cereal-1.3.2/include/',
+            cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_R_BINDINGS=ON -DENABLE_HTTPLIB=OFF -DCEREAL_INCLUDE_DIR=../cereal-1.3.2/include/',
             cores: 4
-          },
-          {
-            runner: ubuntu-latest,
-            os: 'Linux',
-            name: 'Go',
-            cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_GO_BINDINGS=ON -DENABLE_HTTPLIB=ON',
-            cores: 4
-          },
-          {
-            runner: ubuntu-latest,
-            os: 'Linux',
-            name: 'Markdown',
-            cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_MARKDOWN_BINDINGS=ON -DENABLE_HTTPLIB=ON',
-            cores: 4
-          },
-          {
-            runner: macOS-latest,
-            os: 'macOS',
-            name: 'CLI',
-            cmakeVars: '-DBUILD_CLI_EXECUTABLES=ON -DENABLE_HTTPLIB=ON',
-            # Up to 3 cores are supported but the amount of ram provided
-            # leads to severe swapping and massive slowdowns, using 1 is
-            # the best compromise between cores and ram given our C++ load
-            cores: 1
-          },
-          {
-            runner: macOS-latest,
-            os: 'macOS',
-            name: 'Python',
-            cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_PYTHON_BINDINGS=ON -DENABLE_HTTPLIB=ON -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++',
-            # Up to 3 cores are supported but the amount of ram provided
-            # leads to severe swapping and massive slowdowns, using 2 is
-            # the best compromise between cores and ram given our C++ load
-            cores: 2
+          # },
+          # {
+          #   runner: ubuntu-latest,
+          #   os: 'Linux',
+          #   name: 'Go',
+          #   cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_GO_BINDINGS=ON -DENABLE_HTTPLIB=ON',
+          #   cores: 4
+          # },
+          # {
+          #   runner: ubuntu-latest,
+          #   os: 'Linux',
+          #   name: 'Markdown',
+          #   cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_MARKDOWN_BINDINGS=ON -DENABLE_HTTPLIB=ON',
+          #   cores: 4
+          # },
+          # {
+          #   runner: macOS-latest,
+          #   os: 'macOS',
+          #   name: 'CLI',
+          #   cmakeVars: '-DBUILD_CLI_EXECUTABLES=ON -DENABLE_HTTPLIB=ON',
+          #   # Up to 3 cores are supported but the amount of ram provided
+          #   # leads to severe swapping and massive slowdowns, using 1 is
+          #   # the best compromise between cores and ram given our C++ load
+          #   cores: 1
+          # },
+          # {
+          #   runner: macOS-latest,
+          #   os: 'macOS',
+          #   name: 'Python',
+          #   cmakeVars: '-DBUILD_CLI_EXECUTABLES=OFF -DBUILD_PYTHON_BINDINGS=ON -DENABLE_HTTPLIB=ON -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++',
+          #   # Up to 3 cores are supported but the amount of ram provided
+          #   # leads to severe swapping and massive slowdowns, using 2 is
+          #   # the best compromise between cores and ram given our C++ load
+          #   cores: 2
           }
         ]
 
     name: '${{ matrix.config.os }} (${{ matrix.config.name }})'
-    if: ${{ github.repository == 'mlpack/mlpack' }}
     runs-on: ${{ matrix.config.runner }}
 
     steps:
@@ -115,12 +110,13 @@ jobs:
 
       # Set up ccache.
       - name: Get ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+        uses: hendrikmuhs/ccache-action@v1.2.23
         with:
           key: ${{ matrix.config.os }}-${{ matrix.config.name }}
-          append-timestamp: false
+          append-timestamp: true
+          verbose: 1
           variant: ccache
-          max-size: 1G # Github has a 10GB repo cache limit, so we use 1GB/job.
+          max-size: 10G # Github has a 10GB repo cache limit, so we use 1GB/job.
 
       - name: Configure ccache
         shell: bash
@@ -134,12 +130,11 @@ jobs:
         if: matrix.config.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install --yes --allow-unauthenticated \
-              libopenblas-dev libstb-dev libcereal-dev xz-utils
+          sudo apt-get install --yes --allow-unauthenticated libopenblas-dev libcereal-dev xz-utils
 
       # Set up the build environment for any bindings, if needed.
       - name: Set up binding dependencies
-        uses: ./.github/actions/binding_setup
+        uses: ./.github/actions/local_binding_setup
         with:
           lang: ${{ matrix.config.name }}
 
@@ -188,6 +183,7 @@ jobs:
 
       # Run the tests manually so that we can get JUnit output.
       - name: Run mlpack_test
+        if: matrix.config.name == 'CLI'
         run: |
           cd build
           # The use of only one thread is to prevent thrashing on older versions
@@ -197,7 +193,7 @@ jobs:
 
       # Run binding tests for each binding type.
       - name: Run binding tests
-        uses: ./.github/actions/binding_run_tests
+        uses: ./.github/actions/local_binding_run_tests
         with:
           lang: ${{ matrix.config.name }}
 
@@ -227,7 +223,7 @@ jobs:
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: ${{ runner.os }}
-          append-timestamp: false
+          append-timestamp: true
           variant: ccache
           max-size: 1G
 
