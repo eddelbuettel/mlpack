@@ -10,10 +10,6 @@ on:
   workflow_dispatch:
   push:
   pull_request:
-  release:
-    types: [published, created, edited]
-permissions:
-  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -108,22 +104,28 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      # Set up ccache.
-      - name: Get ccache
-        uses: hendrikmuhs/ccache-action@v1.2.23
-        with:
-          key: ${{ matrix.config.os }}-${{ matrix.config.name }}
-          append-timestamp: true
-          verbose: 2
-          variant: ccache
-          max-size: 10G # Github has a 10GB repo cache limit, so we use 1GB/job.
+      # # Set up ccache.
+      # - name: Get ccache
+      #   uses: hendrikmuhs/ccache-action@v1.2.23
+      #   with:
+      #     key: ${{ matrix.config.os }}-${{ matrix.config.name }}
+      #     append-timestamp: true
+      #     verbose: 2
+      #     variant: ccache
+      #     max-size: 10G # Github has a 10GB repo cache limit, so we use 1GB/job.
 
-      - name: Configure ccache
-        shell: bash
-        run: |
-          ccache --set-config "sloppiness=include_file_ctime"
-          ccache --set-config "hash_dir=false"
-          ccache --zero-stats
+      # - name: Configure ccache
+      #   shell: bash
+      #   run: |
+      #     ccache --set-config "sloppiness=include_file_ctime"
+      #     ccache --set-config "hash_dir=false"
+      #     ccache --zero-stats
+
+      # Set up ccache.
+      - name: Setup ccache
+        uses: eddelbuettel/github-actions/ccache-with-R@master
+        with:
+          cachefile: ${{ matrix.config.os }}-${{ matrix.config.name }}
 
       # Install base build dependencies via apt.
       - name: Install apt build dependencies (Linux)
