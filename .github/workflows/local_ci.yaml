@@ -104,23 +104,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      # # Set up ccache.
-      # - name: Get ccache
-      #   uses: hendrikmuhs/ccache-action@v1.2.23
-      #   with:
-      #     key: ${{ matrix.config.os }}-${{ matrix.config.name }}
-      #     append-timestamp: true
-      #     verbose: 2
-      #     variant: ccache
-      #     max-size: 10G # Github has a 10GB repo cache limit, so we use 1GB/job.
-
-      # - name: Configure ccache
-      #   shell: bash
-      #   run: |
-      #     ccache --set-config "sloppiness=include_file_ctime"
-      #     ccache --set-config "hash_dir=false"
-      #     ccache --zero-stats
-
       # Set up ccache.
       - name: Setup ccache
         uses: eddelbuettel/github-actions/ccache-with-R@master
