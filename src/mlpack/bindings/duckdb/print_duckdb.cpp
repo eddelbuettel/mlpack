@@ -29,10 +29,16 @@ extern std::string programName;
  * mlpack_random_forest.cpp.
  */
 void PrintDuckDB(const string& bindingName,
-                 const string& functionName)
+                 const string& functionName,
+                 const string& camelName)
 {
   Params p = IO::Parameters(bindingName);
-  const BindingDetails& doc = p.Doc();
+  //const BindingDetails& doc = p.Doc();
+
+  // The canonical CamelCase binding name (e.g. "RandomForestTrain") as
+  // computed by CMake from PROGRAM_NAME.  Used to form the table-function
+  // name so the generated .cpp matches the generated header.
+  const string tableFunctionName = "Mlpack" + camelName + "TableFunction";
 
   map<string, ParamData>& parameters = p.Parameters();
   using ParamIter = map<string, ParamData>::iterator;
@@ -93,6 +99,17 @@ void PrintDuckDB(const string& bindingName,
     cout << "// Parameter name: " << paramName << "; default value: "
         << result << endl;
   }
+
+  cout << endl;
+  cout << "void " << tableFunctionName << "(ClientContext &context, "
+       << "TableFunctionInput &data_p, DataChunk &output) {" << endl;
+  cout << "bool verbose = get_setting<bool>(context, \"mlpack_verbose\");" << endl;
+  cout << "bool silent = get_setting<bool>(context, \"mlpack_silent\");" << endl;
+
+
+  cout << endl;
+  cout << "}" << endl;
+
 
   cout << endl;
   cout << "} // namespace duckdb" << endl;

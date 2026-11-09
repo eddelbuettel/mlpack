@@ -35,5 +35,5 @@ using namespace mlpack::util;
 int main(int /* argc */, char** /* argv */)
 {
   // All the parameters are registered under the name BINDING_NAME.
-  PrintDuckDB(STRINGIFY(BINDING_NAME), "${PROGRAM_NAME}");
+  PrintDuckDB(STRINGIFY(BINDING_NAME), "${PROGRAM_NAME}", "${PROGRAM_NAME_CAMEL}");
 }

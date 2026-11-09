@@ -22,7 +22,8 @@ namespace duckdb {
  * stdout.
  */
 void PrintDuckDB(const std::string& bindingName,
-                 const std::string& functionName);
+                 const std::string& functionName,
+                 const std::string& camelName);
 
 } // namespace duckdb
 } // namespace bindings
